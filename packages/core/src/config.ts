@@ -77,6 +77,7 @@ export function resolveConfig(
     mergeSelectors: true,
     warnExcluded: true,
     excluded: [],
+    presets: [],
     sortLayers: layers => layers,
     ...config,
     envMode: config.envMode || 'build',

@@ -1,6 +1,6 @@
 {
   "name": "@unocss/config",
-  "version": "0.6.5",
+  "version": "0.7.3",
   "description": "Config loader for UnoCSS",
   "keywords": [],
   "homepage": "https://github.com/antfu/unocsstree/main/packages/config#readme",
@@ -26,8 +26,7 @@
   ],
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch src",
-    "prepublishOnly": "nr build"
+    "dev": "tsup --watch src"
   },
   "engines": {
     "node": ">=14"

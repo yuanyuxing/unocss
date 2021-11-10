@@ -1,6 +1,6 @@
 {
   "name": "@unocss/extractor-pug",
-  "version": "0.6.5",
+  "version": "0.7.3",
   "description": "UnoCSS extractor for Pug",
   "keywords": [
     "unocss",
@@ -34,8 +34,7 @@
   ],
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch src",
-    "prepublishOnly": "nr build"
+    "dev": "tsup --watch src"
   },
   "peerDependencies": {
     "pug": "^3.0.0"

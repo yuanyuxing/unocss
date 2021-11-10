@@ -1,6 +1,6 @@
 {
   "name": "@unocss/core",
-  "version": "0.6.5",
+  "version": "0.7.3",
   "description": "The instant on-demand Atomic CSS engine.",
   "keywords": [
     "unocss",
@@ -37,7 +37,6 @@
   ],
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch src",
-    "prepublishOnly": "nr build"
+    "dev": "tsup --watch src"
   }
 }

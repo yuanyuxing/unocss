@@ -12,22 +12,21 @@ export default defineConfig({
       'unocss': resolve('../packages/unocss/src/index.ts'),
       '@unocss/core': resolve('../packages/core/src/index.ts'),
       '@unocss/vite': resolve('../packages/vite/src/index.ts'),
+      '@unocss/inspector': resolve('../packages/inspector/node/index.ts'),
       '@unocss/preset-uno': resolve('../packages/preset-uno/src/index.ts'),
       '@unocss/preset-attributify': resolve('../packages/preset-attributify/src/index.ts'),
       '@unocss/preset-icons': resolve('../packages/preset-icons/src/index.ts'),
     },
   },
   plugins: [
-    Vue({
-      template: {
-        compilerOptions: {
-          isCustomElement: tag => tag === 'preview-box',
-        },
-      },
-    }),
+    Vue(),
     Unocss(),
     Inspect(),
     Components({
+      dirs: [
+        'src/components',
+        '../packages/inspector/client/components',
+      ],
       dts: 'src/components.d.ts',
     }),
     AutoImport({

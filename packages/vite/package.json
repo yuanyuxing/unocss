@@ -1,6 +1,6 @@
 {
   "name": "@unocss/vite",
-  "version": "0.6.5",
+  "version": "0.7.3",
   "description": "The Vite plugin for UnoCSS",
   "keywords": [
     "unocss",
@@ -34,14 +34,14 @@
   ],
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch src",
-    "prepublishOnly": "nr build"
+    "dev": "tsup --watch src"
   },
   "dependencies": {
     "@rollup/pluginutils": "^4.1.1",
     "@unocss/config": "workspace:*",
     "@unocss/core": "workspace:*",
-    "@unocss/scope": "workspace:*"
+    "@unocss/scope": "workspace:*",
+    "@unocss/inspector": "workspace:*"
   },
   "devDependencies": {
     "vite": "^2.6.13"

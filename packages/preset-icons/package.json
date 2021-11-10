@@ -1,6 +1,6 @@
 {
   "name": "@unocss/preset-icons",
-  "version": "0.6.5",
+  "version": "0.7.3",
   "description": "Pure CSS Icons for UnoCSS",
   "keywords": [
     "unocss",
@@ -41,8 +41,7 @@
   ],
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch src",
-    "prepublishOnly": "nr build"
+    "dev": "tsup --watch src"
   },
   "dependencies": {
     "@iconify/utils": "^1.0.18",

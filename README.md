@@ -1,14 +1,25 @@
-# UnoCSS
+<br>
 
+<p align="center">
+<img src="https://raw.githubusercontent.com/antfu/unocss/main/playground/public/icon-gray.svg" style="width:100px;" />
+</p>
+
+<h1 align="center">UnoCSS</h1>
+
+<p align="center">
 The instant on-demand Atomic CSS engine.
+</p>
 
-[![NPM version](https://img.shields.io/npm/v/unocss?color=a1b858&label=)](https://www.npmjs.com/package/unocss)
+<p align="center">
+<a href="https://www.npmjs.com/package/unocss"><img src="https://img.shields.io/npm/v/unocss?color=c95f8b&amp;label=" alt="NPM version"></a></p>
 
-> 💡 I highly recommend reading this blog post - [**Reimagine Atomic CSS**](https://antfu.me/posts/reimagine-atomic-css) for the story behind this tool.
+<blockquote align="center">
+<p>💡 I highly recommend reading this blog post - <br><a href="https://antfu.me/posts/reimagine-atomic-css"><strong>Reimagine Atomic CSS</strong></a><br>for the story behind</p>
+</blockquote>
 
-###### Try it!
-
-[🤹‍♂️ Online Playground](https://unocss.antfu.me/)
+<br>
+<p align="center"><a href="https://unocss.antfu.me/">🤹‍♂️ Online Playground</a></p>
+<br>
 
 ## Features
 
@@ -16,10 +27,12 @@ Inspired by [Windi CSS](http://windicss.org/), [Tailwind CSS](https://tailwindcs
 
 - [Fully customizable](#configurations) - no core utilities, all functionalities are provided via presets.
 - No parsing, no AST, no scanning, it's **INSTANT** (200x faster than Windi CSS or Tailwind JIT)
-- &lt;3kb min+gzip - zero deps and browser friendly.
+- ~3.5kb min+gzip - zero deps and browser friendly.
 - [Shortcuts](#shortcuts) - aliasing utilities, dynamically.
 - [Attributify Mode](https://github.com/antfu/unocss/tree/main/packages/preset-attributify/) - group utilities in attributes
 - [Pure CSS Icons](https://github.com/antfu/unocss/tree/main/packages/preset-icons/) - use any icon as a single class.
+- [Inspector](#inspector) - inspect and debug interatively.
+- [CSS-in-JS Runtime version](https://github.com/antfu/unocss/tree/main/packages/runtime)
 - [CSS Scoping](#css-scoping)
 - Code-splitting for CSS - ships minimal CSS for MPA.
 - Library friendly - ships atomic styles with your component libraries and safely scoped.
@@ -389,6 +402,33 @@ With this, we could have `m-2` applied only when users hover over the element.
 
 The variant system is very powerful and can't be covered fully in this guide, you can check [the default preset's implementation](https://github.com/antfu/unocss/tree/main/packages/preset-uno/src/variants) to see more advanced usages.
 
+### Extend Theme
+
+UnoCSS also supports the theming system that you might be familiar with in Tailwind / Windi. At the user level, you can specify the `theme` property in your config and it will be deep merged to the default theme.
+
+```ts
+theme: {
+  colors: {
+    'very-cool': '#0000ff',
+  },
+  breakpoints: {
+    xs: '320px',
+    sm: '640px',
+  }
+}
+```
+
+To consume the theme in rules:
+
+```ts
+rules: [
+  [/^text-(.*)$/, ([, c], { theme }) => {
+    if (theme.colors[c])
+      return { color: theme.colors[c] }
+  }]
+]
+```
+
 ### Layers
 
 The orders of CSS will affect their priorities. While we will [retain the order of rules](#ordering), sometimes you may want to group some utilities to have more explicit control of their orders.
@@ -437,6 +477,16 @@ import './my-custom.css'
 // "utilities" layer will have the highest priority
 import 'uno:utilities.css'
 ```
+
+### Inspector
+
+From v0.7.0, our Vite plugin now ships with a dev inspector ([@unocss/inspector](https://github.com/antfu/unocss/tree/main/packages/inspector)) for you to view, play and analyse your custom rules and setup. Visit `http://localhost:3000/__unocss` in your Vite dev server to see it.
+
+<img src="https://user-images.githubusercontent.com/11247099/140885990-1827f5ce-f12a-4ed4-9d63-e5145a65fb4a.png">
+
+### Runtime (CSS-in-JS)
+
+See [@unocss/runtime](https://github.com/antfu/unocss/tree/main/packages/runtime)
 
 ### CSS Scoping
 
