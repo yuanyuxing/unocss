@@ -1,13 +1,14 @@
 import fs from 'fs'
-import findUp from 'find-up'
+import findUp from 'find-up'  // https://github.com/sindresorhus/find-up 查找配置文件
 import { UserConfig } from '@unocss/core'
-import { transform } from 'sucrase'
+import { transform } from 'sucrase' // https://github.com/alangpierce/sucrase 配置文件转换（有各种文件，转换成.js）比babel快
 
 export interface ConfigResult<U> {
   filepath?: string
   config?: U
 }
 
+// 判断是否是目录
 function isDir(path: string) {
   try {
     const stat = fs.lstatSync(path)
@@ -18,6 +19,7 @@ function isDir(path: string) {
   }
 }
 
+// 加载配置文件
 export function loadConfig<U extends UserConfig>(dirOrPath: string | U = process.cwd()): ConfigResult<U> {
   if (typeof dirOrPath !== 'string') {
     return {
@@ -42,6 +44,7 @@ export function loadConfig<U extends UserConfig>(dirOrPath: string | U = process
   return readConfig<U>(filepath)
 }
 
+// 读取配置暴露的模块
 export function readConfig<U>(filepath: string): ConfigResult<U> {
   const content = fs.readFileSync(filepath, 'utf-8')
   const transformed = transform(content, { transforms: ['typescript', 'imports'] }).code

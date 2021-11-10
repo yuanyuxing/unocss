@@ -23,16 +23,16 @@ export function createContext(
   }
 
   return {
-    tokens,
-    modules,
-    invalidate,
+    tokens, // 空令牌数组
+    modules, // 空模块集合
+    invalidate, // 函数集合
     onInvalidate(fn: () => void) {
       invalidations.push(fn)
-    },
+    },  // push fn in invalidate
     uno,
     scan,
-    config,
-    configFilepath,
+    config, // 配置信息
+    configFilepath, // 配置文件路径
   }
 }
 

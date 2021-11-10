@@ -15,6 +15,7 @@ export class UnoGenerator {
     this.config = resolveConfig(userConfig, defaults)
   }
 
+  // 设置配置
   setConfig(userConfig?: UserConfig, defaults?: UserConfigDefaults) {
     if (!userConfig)
       return
@@ -26,6 +27,7 @@ export class UnoGenerator {
     this._cache = new Map()
   }
 
+  // 返回处理过的code的集合Set
   async applyExtractors(code: string, id?: string, set = new Set<string>()) {
     const context: ExtractorContext = {
       get original() { return code },
@@ -58,25 +60,28 @@ export class UnoGenerator {
     const matched = new Set<string>()
     const sheet = new Map<string, StringifiedUtil[]>()
 
+    // pay数据格式：[index: number, selector: string | undefined, body: string, mediaQuery: string | undefined, meta: RuleMeta | undefined]
     const hit = (raw: string, payload: StringifiedUtil[]) => {
       this._cache.set(raw, payload)
-      matched.add(raw)
+      matched.add(raw) // 加在已匹配集合
 
       for (const item of payload) {
         const query = item[3] || ''
         if (!sheet.has(query))
-          sheet.set(query, [])
-        sheet.get(query)!.push(item)
-        if (item[4]?.layer)
+          sheet.set(query, []) 
+        sheet.get(query)!.push(item) // sheet格式：[payload[3] => body: payload]
+        if (item[4]?.layer) // 添加进layerSet(layer可能会有自定义)
           layerSet.add(item[4].layer)
       }
     }
 
     await Promise.all(Array.from(tokens).map(async(raw) => {
+      // 匹配或者被排除（raw：原始）
       if (matched.has(raw) || this.excluded.has(raw))
         return
 
-      // use caches if possible
+      // use caches if possible 尽可能使用缓存
+      // 全局缓存命中（被排除的raw也会加入全局缓存）
       if (this._cache.has(raw)) {
         const r = this._cache.get(raw)
         if (r)
@@ -85,16 +90,16 @@ export class UnoGenerator {
       }
 
       if (this.isExcluded(raw)) {
-        this.excluded.add(raw)
-        this._cache.set(raw, null)
+        this.excluded.add(raw) // 添加全局排除名单
+        this._cache.set(raw, null) // 全局缓存设为null
         return
       }
 
       const applied = this.matchVariants(raw)
 
       if (this.isExcluded(applied[1])) {
-        this.excluded.add(raw)
-        this._cache.set(raw, null)
+        this.excluded.add(raw) // 添加全局排除名单
+        this._cache.set(raw, null) // 全局缓存设为null
         return
       }
 
@@ -116,7 +121,7 @@ export class UnoGenerator {
         }
       }
 
-      // set null cache for unmatched result
+      // set null cache for unmatched result 为不匹配的结果设置空缓存
       this._cache.set(raw, null)
     }))
 
@@ -404,6 +409,7 @@ export class UnoGenerator {
   }
 }
 
+// 生成器（工厂模式）
 export function createGenerator(config?: UserConfig, defaults?: UserConfigDefaults) {
   return new UnoGenerator(config, defaults)
 }

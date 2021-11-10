@@ -2,6 +2,12 @@ import { UserShortcuts, UserConfig, ResolvedConfig, UserConfigDefaults, Shortcut
 import { isStaticRule, mergeDeep, normalizeVariant, toArray, uniq } from './utils'
 import { extractorSplit } from './extractors'
 
+/**
+ * 转化例子
+ * [{a: b, c:d}, [e,f,g]] => [[a,b], [c,d],[e,f,g]]
+ * @param shortcuts 
+ * @returns 
+ */
 export function resolveShortcuts(shortcuts: UserShortcuts): Shortcut[] {
   return toArray(shortcuts).flatMap((s) => {
     if (Array.isArray(s))
@@ -19,9 +25,12 @@ export function resolveConfig(
   userConfig: UserConfig = {},
   defaults: UserConfigDefaults = {},
 ): ResolvedConfig {
+  // 自定义配置 和 默认配置合并
   const config = Object.assign({}, defaults, userConfig) as UserConfigDefaults
+  // 获取合并后的预设（presets）
   const rawPresets = config.presets || []
 
+  // 预设排序（pre => undefined => post）
   const sortedPresets = [
     ...rawPresets.filter(p => p.enforce === 'pre'),
     ...rawPresets.filter(p => !p.enforce),
@@ -30,6 +39,8 @@ export function resolveConfig(
 
   const layers = Object.assign(defaultLayers, ...rawPresets.map(i => i.layers), userConfig.layers)
 
+  // 合并Preset（要唯一）
+  // 预设中的'rules' | 'variants' | 'extractors' | 'shortcuts' | 'preflights'会和配置中的合并
   function mergePresets<T extends 'rules' | 'variants' | 'extractors' | 'shortcuts' | 'preflights'>(key: T): Required<UserConfig>[T] {
     return uniq([
       ...sortedPresets.flatMap(p => toArray(p[key] || []) as any[]),
@@ -40,10 +51,10 @@ export function resolveConfig(
   const extractors = mergePresets('extractors')
   if (!extractors.length)
     extractors.push(extractorSplit)
-  extractors.sort((a, b) => (a.order || 0) - (b.order || 0))
+  extractors.sort((a, b) => (a.order || 0) - (b.order || 0)) // 降序排序
 
   const rules = mergePresets('rules')
-  const rulesStaticMap: ResolvedConfig['rulesStaticMap'] = {}
+  const rulesStaticMap: ResolvedConfig['rulesStaticMap'] = {} // 静态规则映射
 
   const rulesSize = rules.length
 
@@ -56,6 +67,7 @@ export function resolveConfig(
     }
   })
 
+  // 主题合并（累加合并）
   const theme = [
     ...sortedPresets.map(p => p.theme || {}),
     config.theme || {},
@@ -71,9 +83,9 @@ export function resolveConfig(
     shortcutsLayer: config.shortcutsLayer || 'shortcuts',
     layers,
     theme,
-    rulesSize,
-    rulesDynamic: rules as ResolvedConfig['rulesDynamic'],
-    rulesStaticMap,
+    rulesSize, // 规则长度
+    rulesDynamic: rules as ResolvedConfig['rulesDynamic'], // 动态规则映射
+    rulesStaticMap, // 静态规则映射
     preflights: mergePresets('preflights'),
     variants: mergePresets('variants').map(normalizeVariant),
     shortcuts: resolveShortcuts(mergePresets('shortcuts')),

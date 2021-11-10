@@ -2,8 +2,10 @@ import type { Extractor } from '@unocss/core'
 
 const regexVueTemplate = /<template.*?lang=['"]pug['"][^>]*?>\n([\s\S]*?\n)<\/template>/gm
 
+// 对pug语法的提取（从.vue文件，.pug文件解析成html）
 export default function extractorPug(): Extractor {
   async function compile(code: string, id: string) {
+    // https://github.com/pugjs/pug/tree/master/packages/pug
     const Pug = await import('pug')
     try {
       return Pug.compile(code, { filename: id })()
